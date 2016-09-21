@@ -30,7 +30,8 @@ Outcome CompMin(Outcome a, Outcome b){
   }
   else{
     return b;
-  }}
+  }
+}
 
 Outcome brute(const vector<Point>& data) {
     Outcome best(data[0], data[1], distSquared(data[0],data[1]));
@@ -65,8 +66,6 @@ Outcome strip(const vector<Point>& ySorted,const Outcome& toBeat){
 
 Outcome proc(const vector<Point>& xSorted, const vector<Point>& ySorted){
    //pick a line and divide and conquer - Find closest pair within a smaller block i.e. divide by half
-   //consider delta away from theline
-   //only need to consider next 5-7 points going down y
 
    Outcome best(xSorted[0],xSorted[1],distSquared(xSorted[0],xSorted[1])); // default initialization 
    
