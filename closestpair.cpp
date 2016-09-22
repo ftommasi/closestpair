@@ -51,8 +51,9 @@ Outcome strip(const vector<Point>& ySorted,const Outcome& toBeat){
   Outcome best = toBeat;
   for(int i =0; i < ySorted.size(); i++){
     for(int j =i+1; 
-        j< ySorted.size() &&  (distSquared(ySorted[j] , ySorted[i]) < best.dsq);
+        j< ySorted.size() &&  ((ySorted[j].y - ySorted[i].y) < best.dsq);
 	j++){
+      
       if(distSquared(ySorted[i],ySorted[j]) < best.dsq) {
         best = 
 	  Outcome(ySorted[i],ySorted[j],
@@ -71,11 +72,34 @@ Outcome proc(const vector<Point>& xSorted, const vector<Point>& ySorted){
    
    if(xSorted.size() > 2){
       //return the closest so far - compare current best with best of next recursion and get closest/min
+      Point midPoint = xSorted[xSorted.size()/2];
       auto firstHalf = vector<Point>(xSorted.begin(), xSorted.begin() + (xSorted.size()/2));
       auto secondHalf = vector<Point>(xSorted.begin() + (xSorted.size()/2), xSorted.end());
-      auto halvesMin = CompMin(proc(firstHalf,ySorted),proc(secondHalf,ySorted));
+      
+      vector<Point> Yleft;
+      vector<Point> Yright;
+      for(int i=0; i< ySorted.size(); i++){
+        if(ySorted[i].x <= midPoint.x){
+	  Yleft.push_back(ySorted[i]);
+	}
+	else{
+	  Yright.push_back(ySorted[i]);
+	}
+
+      }
+
+      
+      auto halvesMin = CompMin(proc(firstHalf,Yleft),proc(secondHalf,Yright));
       best = halvesMin; 
-      return CompMin(best,strip(ySorted,best));
+      
+      vector<Point> Ystrip;
+      for(int i=0; i < ySorted.size(); i++){
+        if(abs(ySorted[i].x - midPoint.x) < best.dsq){
+	  Ystrip.push_back(ySorted[i]);
+	}
+      }
+
+      return CompMin(best,strip(Ystrip,best));
     }
     else{
       return brute(xSorted);
