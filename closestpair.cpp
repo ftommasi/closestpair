@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <sys/time.h>  // used to seed srand for extra credit
+#include <iostream>
 using namespace std;
 
 //comparitor functions
@@ -65,6 +66,12 @@ Outcome strip(const vector<Point>& ySorted,const Outcome& toBeat){
   return best;
 }	
 
+void dump(const vector<Point>& vec){
+  for(int i=0; i<vec.size(); i++){
+    cout << "(" << vec[i].x << ", " << vec[i].y << ")" << endl;
+  }
+}
+
 Outcome proc(const vector<Point>& xSorted, const vector<Point>& ySorted){
    //pick a line and divide and conquer - Find closest pair within a smaller block i.e. divide by half
 
@@ -76,6 +83,7 @@ Outcome proc(const vector<Point>& xSorted, const vector<Point>& ySorted){
       auto firstHalf = vector<Point>(xSorted.begin(), xSorted.begin() + (xSorted.size()/2));
       auto secondHalf = vector<Point>(xSorted.begin() + (xSorted.size()/2), xSorted.end());
       
+      cout << "Midpoint (" << midPoint.x << ", " << midPoint.y << endl;
       vector<Point> Yleft;
       vector<Point> Yright;
       for(int i=0; i< ySorted.size(); i++){
@@ -87,17 +95,28 @@ Outcome proc(const vector<Point>& xSorted, const vector<Point>& ySorted){
 	}
 
       }
-
-      
-      auto halvesMin = CompMin(proc(firstHalf,Yleft),proc(secondHalf,Yright));
+     
+     cout << "Dumping left" << endl;
+     dump(Yleft);
+     cout << "Done Dumping Left" << endl;
+     cout << "Dumping right" << endl;
+     dump(Yright);
+     cout << "Done Dumping Right" << endl;
+     
+     auto halvesMin = CompMin(proc(firstHalf,Yleft),proc(secondHalf,Yright));
       best = halvesMin; 
-      
+       
       vector<Point> Ystrip;
       for(int i=0; i < ySorted.size(); i++){
         if(abs(ySorted[i].x - midPoint.x) < best.dsq){
 	  Ystrip.push_back(ySorted[i]);
 	}
       }
+
+     cout << "Midpoint (" << midPoint.x << ", " << midPoint.y << endl;
+     cout << "Dumping strip" << endl;
+     dump(Ystrip);
+     cout << "Done Dumping strip" << endl;
 
       return CompMin(best,strip(Ystrip,best));
     }
