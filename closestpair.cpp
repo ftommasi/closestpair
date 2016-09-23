@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <sys/time.h>  // used to seed srand for extra credit
+#include <math.h>
 #include <iostream>
 using namespace std;
 
@@ -14,13 +15,9 @@ bool CompY(const Point& a,const  Point& b){
   return compareByY(a,b);
 }
 
-Outcome CompOut(Outcome a, Outcome b){
-  if( a.dsq< b.dsq){
-  
-    return a;
-  }
-  else{
-    return b;
+void dump(const vector<Point>& vec){
+  for(int i=0; i<vec.size(); i++){
+    cout << "(" << vec[i].x << ", " << vec[i].y << ")" << endl;
   }
 }
 
@@ -51,34 +48,25 @@ Outcome strip(const vector<Point>& ySorted,const Outcome& toBeat){
   //strip logic
   Outcome best = toBeat;
   for(int i =0; i < ySorted.size(); i++){
-    for(int j =i+1; 
-        j< ySorted.size() &&  ((ySorted[j].y - ySorted[i].y) < best.dsq);
-	j++){
-      
-      if(distSquared(ySorted[i],ySorted[j]) < best.dsq) {
-        best = 
-	  Outcome(ySorted[i],ySorted[j],
-	    distSquared(ySorted[i],ySorted[j])
-	    );//update best
-	  }
-	}
-      }
+    for(int j = i+1; 
+      j< ySorted.size() && j < i+7; //(pow((ySorted[j].y - ySorted[i].y),2.0) < best.dsq);
+      j++){
+        if(distSquared(ySorted[i],ySorted[j]) < best.dsq) {
+          best = 
+            Outcome(ySorted[i],ySorted[j],
+            distSquared(ySorted[i],ySorted[j])
+            );//update best
+        }
+    }
+  }
   return best;
 }	
 
-void dump(const vector<Point>& vec){
-  for(int i=0; i<vec.size(); i++){
-    cout << "(" << vec[i].x << ", " << vec[i].y << ")" << endl;
-  }
-}
-
 Outcome proc(const vector<Point>& xSorted, const vector<Point>& ySorted){
-   //pick a line and divide and conquer - Find closest pair within a smaller block i.e. divide by half
-
-   Outcome best(xSorted[0],xSorted[1],distSquared(xSorted[0],xSorted[1])); // default initialization 
-   
-   if(xSorted.size() > 4){
-      //return the closest so far - compare current best with best of next recursion and get closest/min
+   if(xSorted.size() <= 3 ){
+      return brute(xSorted);
+   }
+   else{
       Point midPoint = xSorted[xSorted.size()/2];
       auto firstHalf = vector<Point>(xSorted.begin(), xSorted.begin() + (xSorted.size()/2));
       auto secondHalf = vector<Point>(xSorted.begin() + (xSorted.size()/2), xSorted.end());
@@ -87,13 +75,12 @@ Outcome proc(const vector<Point>& xSorted, const vector<Point>& ySorted){
       vector<Point> Yleft;
       vector<Point> Yright;
       for(int i=0; i< ySorted.size(); i++){
-        if(CompX(ySorted[i], midPoint)){
-	  Yleft.push_back(ySorted[i]);
-	}
-	else{
-	  Yright.push_back(ySorted[i]);
-	}
-
+        if(CompX(ySorted[i] , midPoint)){
+	        Yleft.push_back(ySorted[i]);
+	      }
+	      else{
+	        Yright.push_back(ySorted[i]);
+	      }
       }
      
      //cout << "Dumping left" << endl;
@@ -103,29 +90,35 @@ Outcome proc(const vector<Point>& xSorted, const vector<Point>& ySorted){
      //dump(Yright);
      //cout << "Done Dumping Right" << endl;
      
-     auto delta= CompMin(proc(firstHalf,Yleft),proc(secondHalf,Yright));
-      best = delta; 
+     auto delta = CompMin(proc(firstHalf,Yleft),proc(secondHalf,Yright));
        
       vector<Point> Ystrip;
       for(int i=0; i < ySorted.size(); i++){
               //verify this - what is delta
-        if(abs(ySorted[i].x - midPoint.x) < midpoint.x){
-	  Ystrip.push_back(ySorted[i]);
-	}
+        if(pow(abs(ySorted[i].x - midPoint.x),2.0) < delta.dsq){
+	        Ystrip.push_back(ySorted[i]);
+	      }
       }
 
     // cout << "Midpoint (" << midPoint.x << ", " << midPoint.y << endl;
      //cout << "Dumping strip" << endl;
      //dump(Ystrip);
      //cout << "Done Dumping strip" << endl;
+     for(int i =0; i < Ystrip.size(); i++){
+      for(int j = i+1; 
+        j< Ystrip.size() && (pow((Ystrip[j].y - Ystrip[i].y),2.0) < delta.dsq);
+        j++){
+          if(distSquared(Ystrip[i],Ystrip[j]) < delta.dsq) {
+            delta= 
+              Outcome(Ystrip[i],Ystrip[j],
+              distSquared(Ystrip[i],Ystrip[j])
+              );//update best
+          }
+       }
+      }
 
-      return CompMin(best,strip(Ystrip,best));
+      return delta;
     }
-    else{
-      return brute(xSorted);
-    }
-
-
 }
 
 Outcome efficient(const vector<Point>& data) {
