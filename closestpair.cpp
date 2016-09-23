@@ -83,7 +83,7 @@ Outcome proc(const vector<Point>& xSorted, const vector<Point>& ySorted){
       auto firstHalf = vector<Point>(xSorted.begin(), xSorted.begin() + (xSorted.size()/2));
       auto secondHalf = vector<Point>(xSorted.begin() + (xSorted.size()/2), xSorted.end());
       
-      cout << "Midpoint (" << midPoint.x << ", " << midPoint.y << endl;
+     // cout << "Midpoint (" << midPoint.x << ", " << midPoint.y << endl;
       vector<Point> Yleft;
       vector<Point> Yright;
       for(int i=0; i< ySorted.size(); i++){
@@ -96,12 +96,12 @@ Outcome proc(const vector<Point>& xSorted, const vector<Point>& ySorted){
 
       }
      
-     cout << "Dumping left" << endl;
-     dump(Yleft);
-     cout << "Done Dumping Left" << endl;
-     cout << "Dumping right" << endl;
-     dump(Yright);
-     cout << "Done Dumping Right" << endl;
+     //cout << "Dumping left" << endl;
+     //dump(Yleft);
+     //cout << "Done Dumping Left" << endl;
+     //cout << "Dumping right" << endl;
+     //dump(Yright);
+     //cout << "Done Dumping Right" << endl;
      
      auto halvesMin = CompMin(proc(firstHalf,Yleft),proc(secondHalf,Yright));
       best = halvesMin; 
@@ -113,10 +113,10 @@ Outcome proc(const vector<Point>& xSorted, const vector<Point>& ySorted){
 	}
       }
 
-     cout << "Midpoint (" << midPoint.x << ", " << midPoint.y << endl;
-     cout << "Dumping strip" << endl;
-     dump(Ystrip);
-     cout << "Done Dumping strip" << endl;
+    // cout << "Midpoint (" << midPoint.x << ", " << midPoint.y << endl;
+     //cout << "Dumping strip" << endl;
+     //dump(Ystrip);
+     //cout << "Done Dumping strip" << endl;
 
       return CompMin(best,strip(Ystrip,best));
     }
