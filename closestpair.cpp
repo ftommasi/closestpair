@@ -25,7 +25,7 @@ Outcome CompOut(Outcome a, Outcome b){
 }
 
 Outcome CompMin(Outcome a, Outcome b){
-  if( a.dsq< b.dsq){
+  if( a.dsq < b.dsq){
   
     return a;
   }
@@ -77,7 +77,7 @@ Outcome proc(const vector<Point>& xSorted, const vector<Point>& ySorted){
 
    Outcome best(xSorted[0],xSorted[1],distSquared(xSorted[0],xSorted[1])); // default initialization 
    
-   if(xSorted.size() > 2){
+   if(xSorted.size() > 4){
       //return the closest so far - compare current best with best of next recursion and get closest/min
       Point midPoint = xSorted[xSorted.size()/2];
       auto firstHalf = vector<Point>(xSorted.begin(), xSorted.begin() + (xSorted.size()/2));
@@ -87,7 +87,7 @@ Outcome proc(const vector<Point>& xSorted, const vector<Point>& ySorted){
       vector<Point> Yleft;
       vector<Point> Yright;
       for(int i=0; i< ySorted.size(); i++){
-        if(ySorted[i].x <= midPoint.x){
+        if(CompX(ySorted[i], midPoint)){
 	  Yleft.push_back(ySorted[i]);
 	}
 	else{
@@ -103,12 +103,13 @@ Outcome proc(const vector<Point>& xSorted, const vector<Point>& ySorted){
      //dump(Yright);
      //cout << "Done Dumping Right" << endl;
      
-     auto halvesMin = CompMin(proc(firstHalf,Yleft),proc(secondHalf,Yright));
-      best = halvesMin; 
+     auto delta= CompMin(proc(firstHalf,Yleft),proc(secondHalf,Yright));
+      best = delta; 
        
       vector<Point> Ystrip;
       for(int i=0; i < ySorted.size(); i++){
-        if(abs(ySorted[i].x - midPoint.x) < best.dsq){
+              //verify this - what is delta
+        if(abs(ySorted[i].x - midPoint.x) < midpoint.x){
 	  Ystrip.push_back(ySorted[i]);
 	}
       }
