@@ -16,9 +16,10 @@ bool CompY(const Point& a,const  Point& b){
 }
 
 void dump(const vector<Point>& vec){
-  for(int i=0; i<vec.size(); i++){
-    cout << "(" << vec[i].x << ", " << vec[i].y << ")" << endl;
+  for(unsigned int i=0; i<vec.size(); i++){
+    cout << "(" << vec[i].x << ", " << vec[i].y << ")" << ", ";
   }
+  cout << endl;
 }
 
 Outcome CompMin(Outcome a, Outcome b){
@@ -47,8 +48,8 @@ Outcome brute(const vector<Point>& data) {
 Outcome strip(const vector<Point>& ySorted,const Outcome& toBeat){
   //strip logic
   Outcome best = toBeat;
-  for(int i =0; i < ySorted.size(); i++){
-    for(int j = i+1; 
+  for(unsigned int i =0; i < ySorted.size(); i++){
+    for(unsigned int j = i+1; 
       j< ySorted.size() && j < i+7; //(pow((ySorted[j].y - ySorted[i].y),2.0) < best.dsq);
       j++){
         if(distSquared(ySorted[i],ySorted[j]) < best.dsq) {
@@ -67,45 +68,81 @@ Outcome proc(const vector<Point>& xSorted, const vector<Point>& ySorted){
       return brute(xSorted);
    }
    else{
-      Point midPoint = xSorted[xSorted.size()/2];
-      auto firstHalf = vector<Point>(xSorted.begin(), xSorted.begin() + (xSorted.size()/2));
-      auto secondHalf = vector<Point>(xSorted.begin() + (xSorted.size()/2), xSorted.end());
+      Point midPoint = xSorted[(xSorted.size())/2];
+      auto leftHalf = vector<Point>(xSorted.begin(), xSorted.begin() + (xSorted.size()/2));
+      auto rightHalf = vector<Point>(xSorted.begin() + (xSorted.size()/2), xSorted.end());
       
-     // cout << "Midpoint (" << midPoint.x << ", " << midPoint.y << endl;
       vector<Point> Yleft;
       vector<Point> Yright;
-      for(int i=0; i< ySorted.size(); i++){
-        if(CompX(ySorted[i] , midPoint)){
+      for(unsigned int i=0; i< ySorted.size(); i++){
+        if(compareByX(ySorted[i] , midPoint)){
 	        Yleft.push_back(ySorted[i]);
 	      }
 	      else{
 	        Yright.push_back(ySorted[i]);
 	      }
       }
+    
+      /* 
      
-     //cout << "Dumping left" << endl;
-     //dump(Yleft);
-     //cout << "Done Dumping Left" << endl;
-     //cout << "Dumping right" << endl;
-     //dump(Yright);
-     //cout << "Done Dumping Right" << endl;
+     cout << "Midpoint (" << midPoint.x << ", " << midPoint.y << ")" << endl;
+     cout << "Dumping left" << endl;
+     dump(leftHalf);
+     cout << "Done Dumping Left" << endl;
      
-     auto delta = CompMin(proc(firstHalf,Yleft),proc(secondHalf,Yright));
-       
-      vector<Point> Ystrip;
-      for(int i=0; i < ySorted.size(); i++){
+     cout << "Dumping right" << endl;
+     dump(rightHalf);
+     cout << "Done Dumping Right" << endl;
+
+     cout << "Dumping left" << endl;
+     dump(Yleft);
+     cout << "Done Dumping Left" << endl;
+     
+     cout << "Dumping right" << endl;
+     dump(Yright);
+     cout << "Done Dumping Right" << endl;
+     
+     */
+     
+     auto leftdelta = proc(leftHalf,Yleft);
+     auto rightdelta = proc(rightHalf,Yright);
+     //auto delta = CompMin(proc(leftHalf,Yleft),proc(rightHalf,Yright));
+     Outcome delta = leftdelta;
+
+     if(min(leftdelta.dsq,rightdelta.dsq)==rightdelta.dsq){
+       delta = rightdelta;
+     }
+     else{
+       delta = leftdelta;
+     }
+      
+     vector<Point> Ystrip;
+      for(unsigned int i=0; i < ySorted.size(); i++){
               //verify this - what is delta
-        if(pow(abs(ySorted[i].x - midPoint.x),2.0) < delta.dsq){
+        if(pow(abs(ySorted[i].x - midPoint.x),2.0) <= delta.dsq){
 	        Ystrip.push_back(ySorted[i]);
 	      }
       }
+/*
+    cout << "Midpoint (" << midPoint.x << ", " << midPoint.y << ")" << endl;
+    cout << "delta.dsq = " << delta.dsq << endl; 
+    cout << "Dumping strip" << endl;
+    dump(Ystrip);
+    cout << "Done Dumping strip" << endl;
+  */   
+      for(unsigned int i =0; i< Ystrip.size(); i++){
+        for(unsigned int j = 1; j <  9 ; j++){ //next seven points
+          if( (i+j) > Ystrip.size()-1) break;
+          if(distSquared(Ystrip[i],Ystrip[i+j]) < delta.dsq){
+            delta = Outcome(Ystrip[i],Ystrip[i+j],distSquared(Ystrip[i],Ystrip[i+j])) ;
+          }
+        }
+      }
 
-    // cout << "Midpoint (" << midPoint.x << ", " << midPoint.y << endl;
-     //cout << "Dumping strip" << endl;
-     //dump(Ystrip);
-     //cout << "Done Dumping strip" << endl;
-     for(int i =0; i < Ystrip.size(); i++){
-      for(int j = i+1; 
+//----------------------------------------------------------------
+/*
+      for(unsigned int i =0; i < Ystrip.size(); i++){
+      for(unsigned int j = i+1; 
         j< Ystrip.size() && (pow((Ystrip[j].y - Ystrip[i].y),2.0) < delta.dsq);
         j++){
           if(distSquared(Ystrip[i],Ystrip[j]) < delta.dsq) {
@@ -116,7 +153,7 @@ Outcome proc(const vector<Point>& xSorted, const vector<Point>& ySorted){
           }
        }
       }
-
+*/
       return delta;
     }
 }
