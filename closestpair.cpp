@@ -4,10 +4,9 @@
 #include <cstdlib>
 #include <sys/time.h>  // used to seed srand for extra credit
 #include <math.h>
-#include <iostream>
+
 using namespace std;
 
-//comparitor functions
 Outcome brute(const vector<Point>& data) {
     Outcome best(data[0], data[1], distSquared(data[0],data[1]));
     for (unsigned int j=1; j < data.size(); j++) {
@@ -22,7 +21,7 @@ Outcome brute(const vector<Point>& data) {
 }
 
 Outcome recursive_search(const vector<Point>& xSorted, const vector<Point>& ySorted){
-   if(xSorted.size() <= 3 ){
+   if(xSorted.size() <= 90 ){ //constant value found through experimentation
       return brute(xSorted);
    }
    else{
@@ -55,7 +54,9 @@ Outcome recursive_search(const vector<Point>& xSorted, const vector<Point>& ySor
      
       for(unsigned int i =0; i< Ystrip.size(); i++){
         for(unsigned int j = 1; j <  6 ; j++){ //next five points
+          
           if( (i+j) > Ystrip.size() -1 ) break; //do not go out of bounds
+          
           if(distSquared(Ystrip[i],Ystrip[i+j]) < delta.dsq){
             delta = Outcome(Ystrip[i],Ystrip[i+j],distSquared(Ystrip[i],Ystrip[i+j])) ;
           }
@@ -67,6 +68,7 @@ Outcome recursive_search(const vector<Point>& xSorted, const vector<Point>& ySor
 }
 
 Outcome efficient(const vector<Point>& data) {
+   
    //sortByX
    auto xSorted (data);
    sort(xSorted.begin(),xSorted.end(),compareByX);
