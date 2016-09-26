@@ -2,7 +2,8 @@
 
 2. xSorted is a vector that contains the data sorted by X. This vector is split into two vectors leftHalf and rightHalf which are passed down recursively, each representing the left and right halves of the original vector. ySorted is a vector that contains the same points sorted by Y. This vector is split into Yleft and Yright. These vectors are still sorted by y, but split into the points which are to the left and right of the midpoint. These vectors are passed down recursively. midPoint is the middle point according to x and delta is the current best outcome, as described in the book.
 
-3.The value chosen as the threashold for the brute force is 3. The ideal value according to data gathering (as shown below ) is . The value of 3 was chosen because of the book's description of the algorithm
+3.The value chosen as the threashold for the brute force is 3. The ideal value according to data gathering (as shown below ) is somewhere less, but close to 1000 . The value of 3 was chosen because of the book's description of the algorithm
+
 4.
 N       brute-force       divide-and-conquer
 1,000    1.32143 ms       0.807703 ms
@@ -21,3 +22,6 @@ N       brute-force       divide-and-conquer
 8,000,000    -            11177.3 ms
 16,000,000    -           23323.5 ms
 32,000,000     -          48718.6 ms
+
+5. The brute force approach grows a lot faster in run time as the data set grows. The time closely follows O(n^2). The divide and conquer approach goes up almost linearly. That is, when the data set doubles in size, the run time increases by a little more than double. This behavior agrees with a O(n logn) 
+
