@@ -53,9 +53,9 @@ Outcome recursive_search(const vector<Point>& xSorted, const vector<Point>& ySor
       }
      
       for(unsigned int i =0; i< Ystrip.size(); i++){
-        for(unsigned int j = 1; j <  6 ; j++){ //next five points
+        for(unsigned int j = 1; j <  6 ; j++){ //Look only at next five points as shown by algorithm proof
           
-          if( (i+j) > Ystrip.size() -1 ) break; //do not go out of bounds
+          if( (i+j) > Ystrip.size() -1 ) break; //do not go out of bounds 
           
           if(distSquared(Ystrip[i],Ystrip[i+j]) < delta.dsq){
             delta = Outcome(Ystrip[i],Ystrip[i+j],distSquared(Ystrip[i],Ystrip[i+j])) ;
