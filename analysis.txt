@@ -5,19 +5,19 @@
 3.The value chosen as the threashold for the brute force is 3. The ideal value according to data gathering (as shown below ) is . The value of 3 was chosen because of the book's description of the algorithm
 4.
 N       brute-force       divide-and-conquer
-1,000    
-2,000    
-4,000    
-8,000    
-16,000     
-32,000     
-64,000     
-128,000    
-256,000    
-512,000    
-1,000,000    
-2,000,000    
-4,000,000    
-8,000,000    
-16,000,000     
-32,000,000     
+1,000    1.32143 ms       0.807703 ms
+2,000    5.26757 ms       1.84119 ms
+4,000    21.0404 ms       3.5361 ms
+8,000    84.0212 ms       7.54095 ms
+16,000   336.286 ms       15.6802 ms
+32,000   1348.85 ms       32.7343 ms
+64,000   5373.95 ms       70.1899 ms
+128,000  21493.9 ms       148.504 ms
+256,000  86027.2 ms       308.859 ms
+512,000    -              635.006 ms
+1,000,000   -             1244.96 ms
+2,000,000    -            3275.29 ms
+4,000,000    -            5293.81 ms
+8,000,000    -            11177.3 ms
+16,000,000    -           23323.5 ms
+32,000,000     -          48718.6 ms
